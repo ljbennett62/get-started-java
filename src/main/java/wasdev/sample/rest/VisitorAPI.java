@@ -15,8 +15,6 @@
  *******************************************************************************/ 
 package wasdev.sample.rest;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,14 +27,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Application;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
 
 import wasdev.sample.Visitor;
-import wasdev.sample.store.VCAPHelper;
+import wasdev.sample.store.JedisPoolFactory;
 import wasdev.sample.store.VisitorStore;
 import wasdev.sample.store.VisitorStoreFactory;
 
@@ -47,39 +43,9 @@ public class VisitorAPI extends Application {
 	//Our database store
 	VisitorStore store = VisitorStoreFactory.getInstance();
 	
-	// add a redis connection pool
-	JedisPool pool = new JedisPool(new JedisPoolConfig(), getRedisURI());
+	//Get instance of our Jedis pool
+	JedisPool pool = JedisPoolFactory.getInstance();
 	
-	private URI getRedisURI() {
-		String url;
-		URI uri;
-
-		if (System.getenv("VCAP_SERVICES") != null) {
-			// When running in Bluemix, the VCAP_SERVICES env var will have the credentials for all bound/connected services
-			// Parse the VCAP JSON structure looking for redis.
-			JsonObject redisCredentials = VCAPHelper.getCloudCredentials("redis");
-			if(redisCredentials == null){
-				System.out.println("No redis cache service bound to this application");
-				return null;
-			}
-			url = redisCredentials.get("uri").getAsString();
-		} else {
-			// System.out.println("Running locally. Looking for credentials in redis.properties");
-			url = VCAPHelper.getLocalProperties("redis.properties").getProperty("redis_url");
-			if(url == null || url.length()==0){
-				System.out.println("To use a database, set the Redis url in src/main/resources/redis.properties");
-				return null;
-			}
-		}
-		try {
-			uri = new URI(url);
-		    return uri;
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		}
-	}
 
   /**
    * Gets all Visitors.
