@@ -26,8 +26,12 @@ public class JedisPoolFactory {
 	
 	private static JedisPool pool;
 	static {
+		try { 
 			JedisPool jp = new JedisPool(getRedisURI());
 			pool = jp;
+		} catch (Exception e) {
+		    pool = null;
+		}
 	}
 	
 	public static JedisPool getInstance() {
