@@ -18,7 +18,7 @@ You'll need a [Bluemix account](https://console.ng.bluemix.net/registration/), [
 
 ## Extending this sample to use Compose for Redis
 
-This demonstration application has a behavior that could be improved with some very application logic. When entering the same name twice, the application will add the name to the database a second time. How can we make this better and provide an example of combining a caching service with a data service like Cloudant?
+This demonstration application has a behavior that could be improved with some very simple application logic. When entering the same name twice, the application will add the name to the database a second time. How can we make this better and provide an example of combining a caching service with a data service like Cloudant?
 
 In this lab, you'll change the code to use Redis as a cache, either locally or using the Compose for Redis service on Bluemix. When complete, the application architecture will look like:
 
