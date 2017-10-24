@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *******************************************************************************/ 
+ *******************************************************************************/
 package wasdev.sample.store;
 
 import java.net.URI;
@@ -23,21 +23,21 @@ import com.google.gson.JsonObject;
 import redis.clients.jedis.JedisPool;
 
 public class JedisPoolFactory {
-	
+
 	private static JedisPool pool;
 	static {
-		try { 
+		try {
 			JedisPool jp = new JedisPool(getRedisURI());
 			pool = jp;
 		} catch (Exception e) {
 		    pool = null;
 		}
 	}
-	
+
 	public static JedisPool getInstance() {
 		return pool;
 	}
-	
+
 	private static URI getRedisURI() {
 		String url;
 		URI uri;
@@ -52,7 +52,7 @@ public class JedisPoolFactory {
 			}
 			url = redisCredentials.get("uri").getAsString();
 		} else {
-			// System.out.println("Running locally. Looking for credentials in redis.properties");
+			System.out.println("Running locally. Looking for credentials in redis.properties");
 			url = VCAPHelper.getLocalProperties("redis.properties").getProperty("redis_url");
 			if(url == null || url.length()==0){
 				System.out.println("To use a database, set the Redis url in src/main/resources/redis.properties");
