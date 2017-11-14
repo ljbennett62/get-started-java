@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *******************************************************************************/
+ *******************************************************************************/ 
 package wasdev.sample.rest;
 
 import java.util.ArrayList;
@@ -39,21 +39,20 @@ import wasdev.sample.store.VisitorStoreFactory;
 @ApplicationPath("api")
 @Path("/visitors")
 public class VisitorAPI extends Application {
-
+	
 	//Our database store
 	VisitorStore store = VisitorStoreFactory.getInstance();
-
+	
 	//Get instance of our Jedis pool
 	JedisPool pool = JedisPoolFactory.getInstance();
-
-
+	
   /**
    * Gets all Visitors.
    * REST API example:
    * <code>
    * GET http://localhost:9080/GetStartedJava/api/visitors
    * </code>
-   *
+   * 
    * Response:
    * <code>
    * [ "Bob", "Jane" ]
@@ -64,11 +63,11 @@ public class VisitorAPI extends Application {
     @Path("/")
     @Produces({"application/json"})
     public String getVisitors() {
-
+		
 		if (store == null) {
 			return "[]";
 		}
-
+		
 		List<String> names = new ArrayList<String>();
 		for (Visitor doc : store.getAll()) {
 			String name = doc.getName();
@@ -78,11 +77,10 @@ public class VisitorAPI extends Application {
 		}
 		return new Gson().toJson(names);
     }
-
-
+    
     /**
      * Creates a new Visitor.
-     *
+     * 
      * REST API example:
      * <code>
      * POST http://localhost:9080/GetStartedJava/api/visitors
@@ -110,19 +108,19 @@ public class VisitorAPI extends Application {
       if(store == null) {
     	  return String.format("Hello %s!", visitor.getName());
       }
-			try (Jedis jedis = pool.getResource()) {
-		      /// check to see if this user is already in the cache
-		      if ( jedis.get(visitor.getName()) != null ) {
-			      return String.format("Hello %s! It's nice to see you again.", visitor.getName());
-		      }
-		      store.persist(visitor);
-		      jedis.set(visitor.getName(),"persisted");
-		      return String.format("Hello %s! I've added you to the database.", visitor.getName());
-
+      try (Jedis jedis = pool.getResource()) {
+    	    /// check to see if this user is already in the cache
+    	    if ( jedis.get(visitor.getName()) != null ) {
+    	    	return String.format("Hello %s! It's nice to see you again.", visitor.getName()); 
+    	    }
+    	    store.persist(visitor);
+    	    jedis.set(visitor.getName(),"persisted");
+	        return String.format("Hello %s! I've added you to the database.", visitor.getName());
+    	   
       } catch (Exception e) {
-	      // land here if there is no Redis service, implement default behavior
-	      store.persist(visitor);
-	      return String.format("Hello %s! I've added you to the database.", visitor.getName());
+    	  // land here if there is no Redis service, implement default behavior
+    	  store.persist(visitor);
+    	  return String.format("Hello %s! I've added you to the database.", visitor.getName());
       }
     }
-}
+ }

@@ -56,6 +56,9 @@ public class CloudantVisitorStore implements VisitorStore{
 				return null;
 			}
 			url = cloudantCredentials.get("url").getAsString();
+  	    } else if (System.getenv("CLOUDANTURL") != null) {
+  	      System.out.println("Using credentials in CLOUDANTURL");
+          url = System.getenv("CLOUDANTURL");
 		} else {
 			System.out.println("Running locally. Looking for credentials in cloudant.properties");
 			url = VCAPHelper.getLocalProperties("cloudant.properties").getProperty("cloudant_url");
